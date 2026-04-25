@@ -1,0 +1,6 @@
+@FireEarlyWarningSystem_HostAddress = http://localhost:5136
+
+GET {{FireEarlyWarningSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
