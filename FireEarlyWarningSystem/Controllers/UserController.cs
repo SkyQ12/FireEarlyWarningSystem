@@ -39,6 +39,8 @@ namespace FireEarlyWarningSystem.Controllers
             return await _userService.GetAllUsers();
         }
 
+        // change something
+
         [HttpGet]
         [Route("GetUserById")]
         public async Task<UserViewModel> GetUserById([FromQuery] string userId)
