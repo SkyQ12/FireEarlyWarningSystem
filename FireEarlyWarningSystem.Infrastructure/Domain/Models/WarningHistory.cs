@@ -13,24 +13,24 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Models
         public string CameraId { get; set; }
         public Camera Camera { get; set; }
         //Sensor
-        public YoloDetectType YoloDetection { get; set; }
-        public double TemperatureValue { get; set; }
+        public AIDetectType AIDetection { get; set; }
+        public FlameSensorType FlameSensor { get; set; }
         public double SmokeValue { get; set; }
         //Flag
-        public State CameraState { get; set; }
+        public StateType CameraState { get; set; }
         public DateTime WarningTime { get; set; }
 
         public WarningHistory()
         {
         }
 
-        public WarningHistory(int id, string cameraId, Camera camera, YoloDetectType yoloDetection, double temperatureValue, double smokeValue, State cameraState, DateTime warningTime)
+        public WarningHistory(int id, string cameraId, Camera camera, AIDetectType aIDetection, FlameSensorType flameSensor, double smokeValue, StateType cameraState, DateTime warningTime)
         {
             Id = id;
             CameraId = cameraId;
             Camera = camera;
-            YoloDetection = yoloDetection;
-            TemperatureValue = temperatureValue;
+            AIDetection = aIDetection;
+            FlameSensor = flameSensor;
             SmokeValue = smokeValue;
             CameraState = cameraState;
             WarningTime = warningTime;

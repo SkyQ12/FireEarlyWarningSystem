@@ -98,5 +98,35 @@ namespace FireEarlyWarningSystem.Controllers
             var token = await _userService.Login(login);
             return new OkObjectResult(token);
         }
+
+        [HttpPost]
+        [Route("AddCameraForUser")]
+        public async Task<IActionResult> AddCameraForUser([FromBody] AddCameraForUserViewModel viewModel)
+        {
+            var result = await _userService.AddCameraForUser(viewModel);
+            if (result == "Camera added successfully.")
+            {
+                return new OkObjectResult(result);
+            }
+            else
+            {
+                return new OkObjectResult(result);
+            }
+        }
+
+        [HttpPost]
+        [Route("RemoveCameraFormUser")]
+        public async Task<IActionResult> RemoveCameraFormUser([FromBody] AddCameraForUserViewModel viewModel)
+        {
+            var result = await _userService.RemoveCameraFormUser(viewModel);
+            if (result == "Camera removed successfully.")
+            {
+                return new OkObjectResult(result);
+            }
+            else
+            {
+                return new OkObjectResult(result);
+            }
+        }
     }
 }

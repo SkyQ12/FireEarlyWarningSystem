@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace FireEarlyWarningSystem.Infrastructure.Domain.Models.DataType
 {
-    public enum YoloDetectType
+ public enum FlameSensorType
     {
-        None,
-        Smoke,
-        Fire,
-        FireAndSmoke
+        Non_fire,
+        Fire
     }
 }

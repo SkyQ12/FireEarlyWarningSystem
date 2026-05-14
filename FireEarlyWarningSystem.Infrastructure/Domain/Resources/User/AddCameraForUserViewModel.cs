@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace FireEarlyWarningSystem.Infrastructure.Domain.Resources.User
 {
-    public class UpdateUserInfoViewModel
+    public class AddCameraForUserViewModel
     {
-        public string Name { get; set; }
-        public string UserName { get; set; }
-        public string UserPhoneNumber { get; set; }
+        public string UserId { get; set; }
+        public string CameraId { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FireEarlyWarningSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260424035455_Database1")]
-    partial class Database1
+    [Migration("20260513031454_Database")]
+    partial class Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace FireEarlyWarningSystem.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("AIDetection")
+                        .HasColumnType("int");
+
                     b.Property<double>("Battery")
                         .HasColumnType("float");
 
@@ -42,7 +45,10 @@ namespace FireEarlyWarningSystem.Migrations
                     b.Property<int>("CameraState")
                         .HasColumnType("int");
 
-                    b.Property<string>("FireSmokeImage")
+                    b.Property<int>("FlameSensor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RealtimeCameraLink")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -52,22 +58,12 @@ namespace FireEarlyWarningSystem.Migrations
                     b.Property<double>("SmokeValue")
                         .HasColumnType("float");
 
-                    b.Property<double>("TemperatureValue")
-                        .HasColumnType("float");
-
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserPhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("YoloDetection")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -81,13 +77,6 @@ namespace FireEarlyWarningSystem.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("HomeTown")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -99,10 +88,6 @@ namespace FireEarlyWarningSystem.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sex")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -129,6 +114,9 @@ namespace FireEarlyWarningSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AIDetection")
+                        .HasColumnType("int");
+
                     b.Property<string>("CameraId")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
@@ -136,17 +124,14 @@ namespace FireEarlyWarningSystem.Migrations
                     b.Property<int>("CameraState")
                         .HasColumnType("int");
 
-                    b.Property<double>("SmokeValue")
-                        .HasColumnType("float");
+                    b.Property<int>("FlameSensor")
+                        .HasColumnType("int");
 
-                    b.Property<double>("TemperatureValue")
+                    b.Property<double>("SmokeValue")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("WarningTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("YoloDetection")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

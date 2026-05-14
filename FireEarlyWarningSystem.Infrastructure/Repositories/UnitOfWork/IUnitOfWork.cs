@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartBin.Infrastructure.Repositories.UnitOfWork
+namespace FireEarlyWarningSystem.Infrastructure.Repositories.UnitOfWork
 {
     public interface IUnitOfWork
     {

@@ -19,9 +19,6 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Context.Configurations
             builder.Property(x => x.UserName).HasMaxLength(256).IsRequired();
             builder.Property(x => x.Password).HasMaxLength(50).IsRequired();
             builder.Property(x => x.UserPhoneNumber).HasMaxLength(15).IsRequired();
-            builder.Property(x => x.Sex);
-            builder.Property(x => x.Birthday);
-            builder.Property(x => x.HomeTown);
             builder.Property(x => x.Role).IsRequired();
             builder.HasMany(x => x.Cameras).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 

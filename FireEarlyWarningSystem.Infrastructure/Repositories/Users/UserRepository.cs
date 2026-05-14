@@ -2,7 +2,7 @@
 using FireEarlyWarningSystem.Infrastructure.Domain.Models;
 using FireEarlyWarningSystem.Infrastructure.Domain.Resources.User;
 using Microsoft.EntityFrameworkCore;
-using SmartBin.Infrastructure.Domain.Exceptions;
+using FireEarlyWarningSystem.Infrastructure.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +23,7 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Users
             do
             {
                 user.Id = GenerateUserId();
+                user.Role = "User";
                 isexist = await _context.Users.AnyAsync(x => x.Id == user.Id);
             }
             while (isexist);

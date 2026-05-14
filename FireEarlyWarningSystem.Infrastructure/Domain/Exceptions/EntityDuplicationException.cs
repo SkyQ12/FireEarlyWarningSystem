@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartBin.Infrastructure.Domain.Exceptions
+namespace FireEarlyWarningSystem.Infrastructure.Domain.Exceptions
 {
     public class EntityDuplicationException : Exception
     {

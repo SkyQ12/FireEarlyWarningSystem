@@ -16,11 +16,11 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Context.Configurations
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.CameraId);
 
-            builder.Property(e => e.TemperatureValue);
+            builder.Property(e => e.FlameSensor);
 
             builder.Property(e => e.SmokeValue);
 
-            builder.Property(e => e.YoloDetection);
+            builder.Property(e => e.AIDetection);
 
             builder.Property(e => e.CameraState);
 

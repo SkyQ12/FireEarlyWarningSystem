@@ -24,25 +24,16 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Resources.User
         [DataMember]
         public string UserPhoneNumber { get; set; }
         [DataMember]
-        public string Sex { get; set; }
-        [DataMember]
-        public DateTime Birthday { get; set; }
-        [DataMember]
-        public string HomeTown { get; set; }
-        [DataMember]
         [JsonIgnore]
         public string Role { get; set; }
 
-        public CreateNewUserViewModel(string id, string name, string userName, string password, string userPhoneNumber, string sex, DateTime birthday, string homeTown, string role)
+        public CreateNewUserViewModel(string id, string name, string userName, string password, string userPhoneNumber, string role)
         {
             Id = "";
             Name = name;
             UserName = userName;
             Password = password;
             UserPhoneNumber = userPhoneNumber;
-            Sex = sex;
-            Birthday = birthday;
-            HomeTown = homeTown;
             Role = "User";
         }
     }

@@ -15,11 +15,12 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Context.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(20);
+            builder.Property(x => x.UserId).HasMaxLength(20).IsRequired();
             builder.Property(x => x.CameraName).HasMaxLength(256).IsRequired();
             builder.Property(x => x.Battery);
-            builder.Property(x => x.FireSmokeImage);
-            builder.Property(x => x.YoloDetection);
-            builder.Property(x => x.TemperatureValue);
+            builder.Property(x => x.RealtimeCameraLink);
+            builder.Property(x => x.AIDetection);
+            builder.Property(x => x.FlameSensor);
             builder.Property(x => x.SmokeValue);
             builder.Property(x => x.CameraState);
             builder.Property(x => x.TimeStamp);

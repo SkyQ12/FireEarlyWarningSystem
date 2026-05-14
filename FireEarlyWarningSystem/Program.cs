@@ -1,19 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using FireEarlyWarningSystem.Infrastructure.Domain.Context;
 using FireEarlyWarningSystem.Infrastructure.Services.Users;
-using SmartBin.Infrastructure.Repositories.UnitOfWork;
+using FireEarlyWarningSystem.Infrastructure.Services.Cameras;
+using FireEarlyWarningSystem.Infrastructure.Repositories.UnitOfWork;
 using FireEarlyWarningSystem.Infrastructure.Repositories.Users;
 using FireEarlyWarningSystem.Infrastructure.Domain.Mapping;
 using FireEarlyWarningSystem.Infrastructure.Domain.Resources.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FireEarlyWarningSystem.Infrastructure.Repositories.Cameras;
+using FireEarlyWarningSystem.Infrastructure.Repositories.Admin;
+using FireEarlyWarningSystem.Infrastructure.Services.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler =
+        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -70,11 +78,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Service
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICameraService, CameraService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Repository
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICameraRepository, CameraRepository>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(ModelToViewModelProfile));

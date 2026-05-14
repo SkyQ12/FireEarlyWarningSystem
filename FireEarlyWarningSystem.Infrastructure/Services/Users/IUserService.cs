@@ -18,5 +18,7 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
         public Task<string> ChangePassword(string Id, PasswordChangeViewModel viewModel);
         public Task<string> ChangePasswordByUserName(string userName, PasswordChangeViewModel viewModel);
         public Task<string> Login(LoginViewModel loginViewModel);
+        public Task<string> AddCameraForUser(AddCameraForUserViewModel viewModel);
+        public Task<string> RemoveCameraFormUser(AddCameraForUserViewModel viewModel);
     }
 }

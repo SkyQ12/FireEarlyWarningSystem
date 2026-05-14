@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace FireEarlyWarningSystem.Infrastructure.Domain.Models.DataType
 {
-    public enum State
+    public enum AIDetectType
     {
-        Normal,
-        Warning,
-        Fire
+        None,
+        Fire,
+        Smoke,
+        FireAndSmoke
     }
 }

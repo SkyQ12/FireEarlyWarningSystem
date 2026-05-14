@@ -3,7 +3,7 @@ using FireEarlyWarningSystem.Infrastructure.Domain.Models;
 using FireEarlyWarningSystem.Infrastructure.Domain.Resources.User;
 using FireEarlyWarningSystem.Infrastructure.Repositories.Users;
 using Microsoft.Extensions.Options;
-using SmartBin.Infrastructure.Repositories.UnitOfWork;
+using FireEarlyWarningSystem.Infrastructure.Repositories.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens;
 using System;
@@ -14,18 +14,21 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using FireEarlyWarningSystem.Infrastructure.Repositories.Cameras;
 
 namespace FireEarlyWarningSystem.Infrastructure.Services.Users
 {
     public class UserService : IUserService
     {
         public IUserRepository _userRepository { get; set; }
+        public ICameraRepository _cameraRepository { get; set; }
         public IUnitOfWork _unitOfWork { get; set; }
         public IMapper _mapper { get; set; }
         private readonly JwtSetting _jwtSetting;
-        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptions<JwtSetting> jwtSetting)
+        public UserService(IUserRepository userRepository, ICameraRepository cameraRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptions<JwtSetting> jwtSetting)
         {
             _userRepository = userRepository;
+            _cameraRepository = cameraRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jwtSetting = jwtSetting.Value;
@@ -99,18 +102,6 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
                 if (!string.IsNullOrEmpty(updateViewModel.UserPhoneNumber))
                 {
                     user.UserPhoneNumber = updateViewModel.UserPhoneNumber;
-                }
-                if (!string.IsNullOrEmpty(updateViewModel.Sex))
-                {
-                    user.Sex = updateViewModel.Sex;
-                }
-                if (!string.IsNullOrEmpty(updateViewModel.Birthday.ToString()))
-                {
-                    user.Birthday = updateViewModel.Birthday;
-                }
-                if (!string.IsNullOrEmpty(updateViewModel.HomeTown))
-                {
-                    user.HomeTown = updateViewModel.HomeTown;
                 }
 
                 await _userRepository.UpdateUserInfoAsync(user);
@@ -201,11 +192,78 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
 
             var token = new JwtSecurityToken(
                 claims: myClaims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.UtcNow.AddYears(1),
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<string> AddCameraForUser(AddCameraForUserViewModel viewModel)
+        {
+            var isExistUseer = await _userRepository.IsExistUser(viewModel.UserId);
+            var isExistCamera = await _cameraRepository.IsExistCamera(viewModel.CameraId);
+            if (isExistUseer && isExistCamera)
+            {
+                var checkCamera = await _cameraRepository.GetCameraByIdAsync(viewModel.CameraId);
+                var checkUser = await _userRepository.GetUserByIdAsync(viewModel.UserId);
+                if (checkCamera.UserId == checkUser.Id && checkCamera.UserId != "NSX")
+                {
+                    return "This camera has already been added to this user";
+                }
+                if (checkCamera.UserId != checkUser.Id && checkCamera.UserId != "NSX")
+                {
+                    return "This camera has already been added to another user";
+                }
+                else
+                {
+                    await _cameraRepository.AssignCamera(viewModel.CameraId, viewModel.UserId);                    
+                    await _unitOfWork.CompleteAsync();
+                    return "Add camera for user successfully!";
+                }
+            }
+            else
+            {
+                if (!isExistUseer)
+                {
+                    return "This user does not exist";
+                }
+                else
+                {
+                    return "This camera does not exist";
+                }
+            }
+        }
+
+        public async Task<string> RemoveCameraFormUser(AddCameraForUserViewModel viewModel)
+        {
+            var isExistUseer = await _userRepository.IsExistUser(viewModel.UserId);
+            var isExistCamera = await _cameraRepository.IsExistCamera(viewModel.CameraId);
+            if (isExistUseer && isExistCamera)
+            {
+                var checkCamera = await _cameraRepository.GetCameraByIdAsync(viewModel.CameraId);
+                if (checkCamera.UserId != viewModel.UserId)
+                {
+                    return "This camera does not belong to this user";
+                }
+                else
+                {
+                    await _cameraRepository.AssignCamera(viewModel.CameraId, "NSX");
+                    await _unitOfWork.CompleteAsync();
+                    return "Remove camera for user successfully!";
+                }
+            }
+            else
+            {
+                if (!isExistUseer)
+                {
+                    return "This user does not exist";
+                }
+                else
+                {
+                    return "This camera does not exist";
+                }
+            }
         }
     }
 }

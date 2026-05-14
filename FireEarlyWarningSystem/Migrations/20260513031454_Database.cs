@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FireEarlyWarningSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class Database1 : Migration
+    public partial class Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,9 +20,6 @@ namespace FireEarlyWarningSystem.Migrations
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserPhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Sex = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HomeTown = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -36,13 +33,12 @@ namespace FireEarlyWarningSystem.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CameraName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Battery = table.Column<double>(type: "float", nullable: false),
-                    FireSmokeImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    YoloDetection = table.Column<int>(type: "int", nullable: false),
-                    TemperatureValue = table.Column<double>(type: "float", nullable: false),
+                    RealtimeCameraLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AIDetection = table.Column<int>(type: "int", nullable: false),
+                    FlameSensor = table.Column<int>(type: "int", nullable: false),
                     SmokeValue = table.Column<double>(type: "float", nullable: false),
+                    Battery = table.Column<double>(type: "float", nullable: false),
                     CameraState = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegistationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -65,8 +61,8 @@ namespace FireEarlyWarningSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CameraId = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    YoloDetection = table.Column<int>(type: "int", nullable: false),
-                    TemperatureValue = table.Column<double>(type: "float", nullable: false),
+                    AIDetection = table.Column<int>(type: "int", nullable: false),
+                    FlameSensor = table.Column<int>(type: "int", nullable: false),
                     SmokeValue = table.Column<double>(type: "float", nullable: false),
                     CameraState = table.Column<int>(type: "int", nullable: false),
                     WarningTime = table.Column<DateTime>(type: "datetime2", nullable: false)

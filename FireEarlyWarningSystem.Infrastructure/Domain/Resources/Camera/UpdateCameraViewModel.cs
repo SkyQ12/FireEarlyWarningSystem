@@ -2,50 +2,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FireEarlyWarningSystem.Infrastructure.Domain.Models
+namespace FireEarlyWarningSystem.Infrastructure.Domain.Resources.Camera
 {
-    public class Camera
+    public class UpdateCameraViewModel
     {
-        public string Id { get; set; }
         public string UserId { get; set; }
         public string CameraName { get; set; }
+        public double Battery { get; set; }
         public string RealtimeCameraLink { get; set; }
 
         //Sensor
         public AIDetectType AIDetection { get; set; }
         public FlameSensorType FlameSensor { get; set; }
         public double SmokeValue { get; set; }
-        public double Battery { get; set; }
 
         //Flag
         public StateType CameraState { get; set; }
         public DateTime TimeStamp { get; set; }
-        public DateTime RegistationDate { get; set; }
-        public List<WarningHistory> WarningHistories { get; set; }
-        public User User { get; set; }
 
-        public Camera()
+        public UpdateCameraViewModel(string userId, string cameraName, double battery, string realtimeCameraLink, AIDetectType aIDetection, FlameSensorType flameSensor, double smokeValue, StateType cameraState, DateTime timeStamp)
         {
-        }
-
-        public Camera(string id, string userId, string cameraName, string realtimeCameraLink, AIDetectType aIDetection, FlameSensorType flameSensor, double smokeValue, double battery, StateType cameraState, DateTime timeStamp, DateTime registationDate, List<WarningHistory> warningHistories, User user)
-        {
-            Id = id;
             UserId = userId;
             CameraName = cameraName;
+            Battery = battery;
             RealtimeCameraLink = realtimeCameraLink;
             AIDetection = aIDetection;
             FlameSensor = flameSensor;
             SmokeValue = smokeValue;
-            Battery = battery;
             CameraState = cameraState;
             TimeStamp = timeStamp;
-            RegistationDate = registationDate;
-            WarningHistories = warningHistories;
-            User = user;
         }
     }
 }
