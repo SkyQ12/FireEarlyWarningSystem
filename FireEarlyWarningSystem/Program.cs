@@ -12,6 +12,10 @@ using System.Text;
 using FireEarlyWarningSystem.Infrastructure.Repositories.Cameras;
 using FireEarlyWarningSystem.Infrastructure.Repositories.Admin;
 using FireEarlyWarningSystem.Infrastructure.Services.Admin;
+using FireEarlyWarningSystem.Infrastructure.Repositories.WarningHistories;
+using FireEarlyWarningSystem.Infrastructure.Services.WarningHistories;
+using FireEarlyWarningSystem.Infrastructure.MqttClients;
+using FireEarlyWarningSystem.BackgroundHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,16 +81,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// MQTT
+builder.Host.ConfigureServices(services =>
+{
+    services.Configure<HostOptions>(options =>
+    {
+        options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+    });
+});
+builder.Services.AddHostedService<MqttSubcribeService>();
+builder.Services.Configure<MqttOptions>(builder.Configuration.GetSection("MqttOptions"));
+builder.Services.AddSingleton<ManagedMqttClient>();
+builder.Services.AddSingleton<MqttBuffer>();
+
 // Service
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICameraService, CameraService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IWarningHistoryService, WarningHistoryService>();
 
 // Repository
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICameraRepository, CameraRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IWarningHistoryRepository, WarningHistoryRepository>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(ModelToViewModelProfile));

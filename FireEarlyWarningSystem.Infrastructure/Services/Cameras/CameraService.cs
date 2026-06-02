@@ -9,22 +9,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FireEarlyWarningSystem.Infrastructure.Domain.Models;
+using FireEarlyWarningSystem.Infrastructure.Repositories.WarningHistories;
 
 namespace FireEarlyWarningSystem.Infrastructure.Services.Cameras
 {
     public class CameraService : ICameraService
     {
-        
+        public IWarningHistoryRepository _WarningHistoryRepository { get; set; }
         public ICameraRepository _CameraRepository { get; set; }
         public IMapper _mapper { get; set; }
         public IUnitOfWork _unitOfWork { get; set; }
 
-        public CameraService(ICameraRepository cameraRepository, IMapper mapper, IUnitOfWork unitOfWork)
+        public CameraService(IWarningHistoryRepository warningHistoryRepository, ICameraRepository cameraRepository, IMapper mapper, IUnitOfWork unitOfWork)
         {
+            _WarningHistoryRepository = warningHistoryRepository;
             _CameraRepository = cameraRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+
         public async Task<List<CameraViewModel>> GetCamera()
         {
             var source = await _CameraRepository.GetAllCameraAsync() ?? throw new ResourceNotfoundException();
@@ -54,6 +57,7 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Cameras
 
         public async Task<bool> DeleteCamera(string cameraId)
         {
+            await _WarningHistoryRepository.DeleteWarningHistoryByCameraIdAsync(cameraId);
             var source = await _CameraRepository.GetCameraByIdAsync(cameraId);
             var result = _CameraRepository.DeleteCameraAsync(source);
             return await _unitOfWork.CompleteAsync();
