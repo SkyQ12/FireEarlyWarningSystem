@@ -56,16 +56,16 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Cameras
         }
 
         public async Task<bool> DeleteCamera(string cameraId)
-        {
-            var camera = await _CameraRepository.GetCameraByIdAsync(cameraId);
+{
+    var camera = await _CameraRepository.GetCameraByIdAsync(cameraId);
 
-            if (camera == null)
-            {
-                return false;
-            }
+    if (camera == null)
+    {
+        return false;
+    }
 
-            return await _CameraRepository.DeleteCameraAsync(camera);
-        }
+    return await _CameraRepository.DeleteCameraAsync(camera);
+}
 
         public async Task<bool> UpdateCameraStatus(UpdateCameraViewModel updateCamera, string cameraId)
         {

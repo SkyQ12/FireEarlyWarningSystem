@@ -95,5 +95,12 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Users
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.UserName == user.UserName && x.Password == user.Password && x.Role == "User");
             return currentUser != null ? currentUser : throw new ResourceNotfoundException("UserName or Password is incorrect!");
         }
+
+        public async Task<User> GetUserIdByUserName(string userName)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == userName && x.Role == "User");
+            return user != null ? user : throw new ResourceNotfoundException("Not found user!");
+        }
+
     }
 }

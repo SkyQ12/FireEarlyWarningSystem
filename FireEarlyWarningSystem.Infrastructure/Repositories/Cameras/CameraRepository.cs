@@ -168,5 +168,11 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Cameras
 
             await _context.SaveChangesAsync();
         }
+        
+        public async Task<List<Camera>> GetCameraIdByUserId(string userId)
+        {
+            return await _context.Cameras.Where(c => c.UserId == userId).ToListAsync();
+        }
+        
     }
 }

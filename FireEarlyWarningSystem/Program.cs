@@ -30,6 +30,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // CORS
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -38,12 +39,13 @@ builder.Services.AddCors(options =>
             builder
             .WithOrigins("http://localhost:3003", "http://localhost:3002", "http://localhost:3001", "http://localhost:3000", "http://localhost:7144",
                          "http://localhost:3007", "http://localhost:3008", "http://localhost:3009", "http://localhost:3010",
-                         "https://web-smart-bin.vercel.app", "https://smart-bin-gps.vercel.app")
+                         "https://web-smart-bin.vercel.app", "https://smart-bin-gps.vercel.app", "http://localhost:5173", "https://localhost:5173")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
         });
 });
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("FireEarlyWarningSystem"))
@@ -123,11 +125,13 @@ if (app.Environment.IsDevelopment())
 
 
 
-
+app.UseCors("AllowAll");
 
 
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -19,5 +19,6 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Cameras
         public Task<bool> AssignCamera(string cameraId, string userId);
         public Task SaveCameraMetricToDatabase(string cameraId, AIDetectType aIDetection, FlameSensorType flameSensor, double smokeValue, StateType cameraState, double battery, DateTime warningTime);
         public Task SaveCameraLinkToDatabase(string cameraId, string realtimeCameraLink);
+        public Task<List<Camera>> GetCameraIdByUserId(string userId);
     }
 }

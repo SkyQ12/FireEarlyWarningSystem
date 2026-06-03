@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FireEarlyWarningSystem.Infrastructure.Repositories.Cameras;
+using FireEarlyWarningSystem.Infrastructure.MqttClients;
+using Newtonsoft.Json;
 
 namespace FireEarlyWarningSystem.Infrastructure.Services.Users
 {
@@ -25,13 +27,16 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
         public IUnitOfWork _unitOfWork { get; set; }
         public IMapper _mapper { get; set; }
         private readonly JwtSetting _jwtSetting;
-        public UserService(IUserRepository userRepository, ICameraRepository cameraRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptions<JwtSetting> jwtSetting)
+        private readonly ManagedMqttClient _mqttClient;
+
+        public UserService(IUserRepository userRepository, ICameraRepository cameraRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptions<JwtSetting> jwtSetting, ManagedMqttClient managedMqttClient)
         {
             _userRepository = userRepository;
             _cameraRepository = cameraRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jwtSetting = jwtSetting.Value;
+            _mqttClient = managedMqttClient;
         }
 
 
@@ -105,6 +110,24 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
                 }
 
                 await _userRepository.UpdateUserInfoAsync(user);
+                var userId = await _userRepository.GetUserIdByUserName(userName);
+                var cameras = await _cameraRepository.GetCameraIdByUserId(userId.Id);
+                Console.WriteLine($"Camera count = {cameras?.Count}");
+
+                var payload = JsonConvert.SerializeObject(new
+                {
+                    PhoneNumber = user.UserPhoneNumber
+                });
+
+                foreach (var camera in cameras)
+                {
+                    Console.WriteLine($"Publishing to topic: Camera/{camera.Id}/PhoneNumber with payload: {payload}");
+                    await _mqttClient.Publish(
+                        $"Camera/{camera.Id}/PhoneNumber",
+                        payload,
+                        true);
+                }
+
                 return await _unitOfWork.CompleteAsync();
             }
             else
@@ -217,7 +240,21 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
                 }
                 else
                 {
-                    await _cameraRepository.AssignCamera(viewModel.CameraId, viewModel.UserId);                    
+                    await _cameraRepository.AssignCamera(viewModel.CameraId, viewModel.UserId);
+
+
+                    // MQTT
+
+                    var payload = JsonConvert.SerializeObject(new
+                    {
+                        PhoneNumber = checkUser.UserPhoneNumber
+                    });
+
+                    
+                    Console.WriteLine($"Publishing to topic: Camera/{viewModel.CameraId}/PhoneNumber with payload: {payload}");
+                    await _mqttClient.Publish($"Camera/{viewModel.CameraId}/PhoneNumber", payload, true);
+                    
+
                     await _unitOfWork.CompleteAsync();
                     return "Add camera for user successfully!";
                 }
@@ -249,6 +286,17 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.Users
                 else
                 {
                     await _cameraRepository.AssignCamera(viewModel.CameraId, "NSX");
+
+                    // MQTT
+                    var checkUser = await _userRepository.GetUserByIdAsync(viewModel.UserId);
+                    var payload = JsonConvert.SerializeObject(new
+                    {
+                        PhoneNumber = "NONE"
+                    });
+
+                    Console.WriteLine($"Publishing to topic: Camera/{viewModel.CameraId}/PhoneNumber with payload: {payload}");
+                    await _mqttClient.Publish($"Camera/{viewModel.CameraId}/PhoneNumber", payload, true);
+
                     await _unitOfWork.CompleteAsync();
                     return "Remove camera for user successfully!";
                 }

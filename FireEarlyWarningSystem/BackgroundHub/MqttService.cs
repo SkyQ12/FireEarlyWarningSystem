@@ -76,7 +76,7 @@ namespace FireEarlyWarningSystem.BackgroundHub
                     cameraMetric.Battery,
                     cameraMetric.Timestamp);
 
-                if (cameraMetric.CameraState != 0)
+                if (cameraMetric.CameraState != 0|cameraMetric.CameraState != 2)
                 {
                     using var WarningHistoryScope = _serviceScopeFactory.CreateScope();
                     var warningHistoryRepository =

@@ -18,6 +18,7 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Users
         public Task DeleteUser(User user);
         public Task UpdateUserInfoAsync(User user);
         public Task<User> LoginAsync(LoginViewModel user);
+        public Task<User> GetUserIdByUserName(string userName);
         
     }
 }
