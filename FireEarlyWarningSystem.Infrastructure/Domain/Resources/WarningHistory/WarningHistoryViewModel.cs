@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FireEarlyWarningSystem.Infrastructure.Domain.Resources.WarningHistory
 {
-    public class WariningHistoryViewModel
+    public class WarningHistoryViewModel
     {
         public int Id { get; set; }
         public string CameraId { get; set; }

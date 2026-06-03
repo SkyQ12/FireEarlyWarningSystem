@@ -11,8 +11,8 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.WarningHistories
 {
     public interface IWarningHistoryService
     {
-        public Task<List<WariningHistoryViewModel>> GetAllWarningHistory();
-        public Task<List<WariningHistoryViewModel>> GetWarningHistoryByCameraId(string cameraId);
+        public Task<List<WarningHistoryViewModel>> GetAllWarningHistory();
+        public Task<List<WarningHistoryViewModel>> GetWarningHistoryByCameraId(string cameraId);
         public Task <bool> DeleteAllWarningHistory();
         public Task<bool> DeleteWarningHistoryByCameraId(string cameraId);
     }

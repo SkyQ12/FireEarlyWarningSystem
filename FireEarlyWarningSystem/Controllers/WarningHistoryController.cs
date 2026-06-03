@@ -19,14 +19,14 @@ namespace FireEarlyWarningSystem.Controllers
         }
         [HttpGet]
         [Route("GetAllWarningHistories")]
-        public async Task<List<WariningHistoryViewModel>> GetAllWarningHistories()
+        public async Task<List<WarningHistoryViewModel>> GetAllWarningHistories()
         {
             return await _warningHistoryService.GetAllWarningHistory();
         }
 
         [HttpGet]
         [Route("GetWarningHistoryByCameraId")]
-        public async Task<List<WariningHistoryViewModel>> GetWarningHistoryByCameraId([FromQuery] string cameraId)
+        public async Task<List<WarningHistoryViewModel>> GetWarningHistoryByCameraId([FromQuery] string cameraId)
         {
             return await _warningHistoryService.GetWarningHistoryByCameraId(cameraId);
         }

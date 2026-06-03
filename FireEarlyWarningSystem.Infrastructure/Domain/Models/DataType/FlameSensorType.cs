@@ -8,7 +8,7 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Models.DataType
 {
  public enum FlameSensorType
     {
-        Non_fire,
-        Fire
+        Non_fire, // 0
+        Fire      // 1
     }
 }

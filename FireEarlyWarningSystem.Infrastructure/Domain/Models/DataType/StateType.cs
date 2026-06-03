@@ -8,9 +8,9 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Models.DataType
 {
     public enum StateType
     {
-        Disconnected,
-        Normal,
-        Alarm,
-        SomeoneTurnOffAlarm
+        Disconnected, // Bỏ
+        Normal,  // 0
+        Alarm,   // 1
+        SomeoneTurnOffAlarm // 2
     }
 }

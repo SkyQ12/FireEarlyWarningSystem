@@ -8,9 +8,9 @@ namespace FireEarlyWarningSystem.Infrastructure.Domain.Models.DataType
 {
     public enum AIDetectType
     {
-        None,
-        Fire,
-        Smoke,
-        FireAndSmoke
+        None,    // 0 
+        Fire,   // 1
+        Smoke,   // 2
+        FireAndSmoke  // 3
     }
 }

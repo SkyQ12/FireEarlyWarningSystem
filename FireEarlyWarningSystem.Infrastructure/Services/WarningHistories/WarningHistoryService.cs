@@ -25,32 +25,35 @@ namespace FireEarlyWarningSystem.Infrastructure.Services.WarningHistories
             _mapper = mapper;
         }
 
-        public async Task<List<WariningHistoryViewModel>> GetAllWarningHistory()
+        public async Task<List<WarningHistoryViewModel>> GetAllWarningHistory()
         {
             var source = await _warningHistoryRepository.GetAllWanringHistoryAsync();
-            var result = _mapper.Map<List<WarningHistory>, List<WariningHistoryViewModel>>(source);
+            var result = _mapper.Map<List<WarningHistory>, List<WarningHistoryViewModel>>(source);
             return result;
         }
 
-        public async Task<List<WariningHistoryViewModel>> GetWarningHistoryByCameraId(string cameraId)
+        public async Task<List<WarningHistoryViewModel>> GetWarningHistoryByCameraId(string cameraId)
         {
             var source = await _warningHistoryRepository.GetAllWanringHistoryAsync();
             var filterSource = source.Where(x => x.CameraId == cameraId).ToList();
             if (filterSource.Count == 0)
             {
-                return new List<WariningHistoryViewModel>();
+                return new List<WarningHistoryViewModel>();
             }
-            var result = _mapper.Map<List<WarningHistory>, List<WariningHistoryViewModel>>(filterSource);
+            var result = _mapper.Map<List<WarningHistory>, List<WarningHistoryViewModel>>(filterSource);
             return result;
         }
         public async Task<bool> DeleteAllWarningHistory()
         {
             var source = await _warningHistoryRepository.GetAllWanringHistoryAsync();
+
             if (source.Count == 0)
             {
                 return false;
             }
-            _warningHistoryRepository.DeleteAllWarningHistoryAsync();
+
+            await _warningHistoryRepository.DeleteAllWarningHistoryAsync();
+
             return true;
         }
 

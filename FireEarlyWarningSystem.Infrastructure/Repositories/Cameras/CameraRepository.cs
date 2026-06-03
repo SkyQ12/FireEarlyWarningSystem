@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FireEarlyWarningSystem.Infrastructure.Repositories;
 using FireEarlyWarningSystem.Infrastructure.Domain.Exceptions;
 using FireEarlyWarningSystem.Infrastructure.Domain.Context.Configurations;
+using FireEarlyWarningSystem.Infrastructure.Domain.Models.DataType;
 
 namespace FireEarlyWarningSystem.Infrastructure.Repositories.Cameras
 {
@@ -42,10 +43,30 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Cameras
             }
         }
 
-        public bool DeleteCameraAsync(Camera deleteCamera)
+        public async Task<bool> DeleteCameraAsync(Camera deleteCamera)
         {
-            _context.Cameras.RemoveRange(deleteCamera);
-            return true;
+            if (deleteCamera == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                await _context.WarningHistories
+                    .Where(x => x.CameraId == deleteCamera.Id)
+                    .ExecuteDeleteAsync();
+
+                await _context.Cameras
+                    .Where(x => x.Id == deleteCamera.Id)
+                    .ExecuteDeleteAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         public async Task UpdateCameraAsync(Camera updateCamera)
@@ -61,12 +82,91 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Cameras
 
         public async Task<bool> AssignCamera(string cameraId, string userId)
         {
-            var camera = await _context.Cameras.FirstOrDefaultAsync(x => x.Id == cameraId);
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            camera.UserId = userId;
+            try
+            {
+                var camera = await _context.Cameras
+                    .FirstOrDefaultAsync(x => x.Id == cameraId);
+
+                if (camera == null)
+                {
+                    return false;
+                }
+
+                // Xóa toàn bộ warning history của camera
+                var histories = await _context.WarningHistories
+                    .Where(x => x.CameraId == cameraId)
+                    .ToListAsync();
+
+                if (histories.Any())
+                {
+                    _context.WarningHistories.RemoveRange(histories);
+                }
+
+                // Gán user mới
+                camera.UserId = userId;
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task SaveCameraMetricToDatabase(string cameraId, AIDetectType aiDetection, FlameSensorType flameSensor, double smokeValue, StateType cameraState, double battery, DateTime timeStamp)
+        {
+            if (string.IsNullOrWhiteSpace(cameraId))
+            {
+                throw new ArgumentException("CameraId is required.");
+            }
+
+            var camera = await _context.Cameras
+                .FirstOrDefaultAsync(x => x.Id == cameraId);
+
+            if (camera == null)
+            {
+                throw new Exception($"Camera '{cameraId}' does not exist.");
+            }
+
+            camera.AIDetection = aiDetection;
+            camera.FlameSensor = flameSensor;
+            camera.SmokeValue = smokeValue;
+            camera.CameraState = cameraState;
+            camera.Battery = battery;
+            camera.TimeStamp = timeStamp;
 
             await _context.SaveChangesAsync();
-            return true;
+        }
+        public async Task SaveCameraLinkToDatabase(string cameraId, string realtimeCameraLink)
+        {
+            if (string.IsNullOrWhiteSpace(cameraId))
+            {
+                throw new ArgumentException("CameraId is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(realtimeCameraLink))
+            {
+                throw new ArgumentException("RealtimeCameraLink is required.");
+            }
+
+            var camera = await _context.Cameras
+                .FirstOrDefaultAsync(x => x.Id == cameraId);
+
+            if (camera == null)
+            {
+                throw new Exception($"Camera '{cameraId}' does not exist.");
+            }
+
+            camera.RealtimeCameraLink = realtimeCameraLink;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

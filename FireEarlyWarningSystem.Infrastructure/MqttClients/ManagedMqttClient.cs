@@ -136,5 +136,7 @@ namespace FireEarlyWarningSystem.Infrastructure.MqttClients
                 Console.WriteLine($"MQTT Client Publish {applicationMessage.Topic} Failed: {result.ReasonCode}");
             }
         }
+
+
     }
 }

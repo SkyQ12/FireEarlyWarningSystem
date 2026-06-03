@@ -89,7 +89,7 @@ builder.Host.ConfigureServices(services =>
         options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
     });
 });
-builder.Services.AddHostedService<MqttSubcribeService>();
+builder.Services.AddHostedService<MqttService>();
 builder.Services.Configure<MqttOptions>(builder.Configuration.GetSection("MqttOptions"));
 builder.Services.AddSingleton<ManagedMqttClient>();
 builder.Services.AddSingleton<MqttBuffer>();

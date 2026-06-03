@@ -16,12 +16,20 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.WarningHistories
         {
         }
 
-        public async Task SaveWarningHistoryToDatabase(string cameraId, AIDetectType aIDetection, FlameSensorType flameSensor, double smokeValue, StateType cameraState, DateTime warningTime)
+        public async Task SaveWarningHistoryToDatabase(string cameraId, AIDetectType aiDetection, FlameSensorType flameSensor, double smokeValue, StateType cameraState, DateTime warningTime)
         {
+            bool cameraExists = await _context.Cameras
+                .AnyAsync(x => x.Id == cameraId);
+
+            if (!cameraExists)
+            {
+                throw new Exception($"Camera '{cameraId}' not found.");
+            }
+
             var history = new WarningHistory
             {
                 CameraId = cameraId,
-                AIDetection = aIDetection,
+                AIDetection = aiDetection,
                 FlameSensor = flameSensor,
                 SmokeValue = smokeValue,
                 CameraState = cameraState,
@@ -29,6 +37,7 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.WarningHistories
             };
 
             _context.WarningHistories.Add(history);
+
             await _context.SaveChangesAsync();
         }
 

@@ -61,14 +61,33 @@ namespace FireEarlyWarningSystem.Infrastructure.Repositories.Users
 
         public async Task DeleteUser(User user)
         {
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                await _context.Cameras
+                    .Where(x => x.UserId == user.Id)
+                    .ExecuteUpdateAsync(x => x
+                        .SetProperty(c => c.UserId, "NSX"));
+
+                _context.Users.Remove(user);
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task UpdateUserInfoAsync(User user)
         {
             _context.Update(user);
             await _context.SaveChangesAsync();
+
         }
 
         public async Task<User> LoginAsync(LoginViewModel user)
